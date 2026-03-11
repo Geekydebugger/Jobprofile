@@ -37,22 +37,25 @@
     .btn-logout:hover { color: var(--danger); border-color: rgba(255,77,77,0.3); }
     .theme-toggle { background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
 
-    .hero { padding: 80px 24px 60px; text-align: center; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent); pointer-events: none; }
-    .hero-badge { display: inline-block; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); color: var(--accent); font-size: 0.8rem; padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; }
-    .hero-title { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.8rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin-bottom: 20px; }
-    .hero-title em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero-sub { color: var(--text-muted); font-size: 1rem; max-width: 460px; margin: 0 auto 32px; line-height: 1.6; }
-    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
-    .hero-stats { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
-    .stat { text-align: center; font-size: 0.8rem; color: var(--text-muted); }
-    .stat span { display: block; font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text); }
-    .stat-div { width: 1px; height: 32px; background: var(--border); }
+    .hero { padding: 90px 24px 64px; text-align: center; position: relative; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 22px; }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero-title { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; line-height: 1.12; letter-spacing: -1.5px; margin-bottom: 18px; color: var(--text); }
+    .hero-title em { font-style: normal; color: var(--accent); }
+    .hero-sub { color: var(--text-muted); font-size: 1rem; max-width: 420px; margin: 0 auto 36px; line-height: 1.7; font-weight: 400; }
+    .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+    .hero-stats { display: flex; align-items: stretch; justify-content: center; gap: 0; max-width: 520px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .stat { flex: 1; padding: 18px 20px; text-align: center; }
+    .stat + .stat { border-left: 1px solid var(--border); }
+    .stat span { display: block; font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--text); letter-spacing: -0.5px; margin-bottom: 2px; }
+    .stat p { font-size: 0.72rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+    .stat-div { display: none; }
 
-    .btn-primary { display: inline-flex; align-items: center; background: var(--accent); color: #0d0d0f; padding: 12px 24px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
-    .btn-primary:hover { background: #fbb83e; transform: translateY(-1px); }
-    .btn-ghost { display: inline-flex; align-items: center; background: transparent; color: var(--text-muted); padding: 12px 24px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
-    .btn-ghost:hover { color: var(--text); }
+    .btn-primary { display: inline-flex; align-items: center; gap: 7px; background: var(--text); color: var(--bg); padding: 11px 22px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 7px; background: transparent; color: var(--text-muted); padding: 11px 22px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.88rem; text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
 
     .search-section { padding: 0 24px 44px; }
     .search-bar { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 6px 6px 18px; max-width: 660px; margin: 0 auto; transition: border-color 0.2s; }
@@ -127,19 +130,17 @@
 
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">🔥 2,400+ openings this week</div>
-    <h1 class="hero-title">Your Next<br><em>Big Career</em><br>Move Starts Here.</h1>
-    <p class="hero-sub">Curated roles from top startups & enterprises. No noise — just opportunity.</p>
+    <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span> Now live — remote & local jobs in one place</div>
+    <h1 class="hero-title">The smarter way to<br>find work that <em>fits you.</em></h1>
+    <p class="hero-sub">Browse curated job listings from companies that are actually hiring. No spam, no noise.</p>
     <div class="hero-actions">
-      <a href="#jobs" class="btn-primary">Explore Jobs</a>
-      <a href="login.html" class="btn-ghost">Get Started →</a>
+      <a href="#jobs" class="btn-primary">Browse Open Roles</a>
+      <a href="login.html" class="btn-ghost">Create an Account</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><span>12K+</span>Companies</div>
-      <div class="stat-div"></div>
-      <div class="stat"><span>48K+</span>Candidates</div>
-      <div class="stat-div"></div>
-      <div class="stat"><span>94%</span>Hire Rate</div>
+      <div class="stat"><span>12K+</span><p>Companies</p></div>
+      <div class="stat"><span>48K+</span><p>Candidates</p></div>
+      <div class="stat"><span>94%</span><p>Hire Rate</p></div>
     </div>
   </div>
 </section>
