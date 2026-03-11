@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post a Job — Jobify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root[data-theme="dark"]{--bg:#0d0d0f;--surface:#161618;--surface2:#1e1e21;--border:rgba(255,255,255,0.07);--accent:#f5a623;--accent2:#ff6b35;--text:#f0ede8;--text-muted:#888;--text-faint:#444;--success:#3ecf8e;--danger:#ff4d4d;--shadow:rgba(0,0,0,0.4)}
+    :root[data-theme="light"]{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0f0eb;--border:rgba(0,0,0,0.08);--accent:#e8950f;--accent2:#ff6b35;--text:#0d0d0f;--text-muted:#666;--text-faint:#999;--success:#2db87a;--danger:#e03030;--shadow:rgba(0,0,0,0.1)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    .navbar{position:sticky;top:0;z-index:100;background:var(--bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-content{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .logo-dot{color:var(--accent)}
+    .nav-links{display:flex;align-items:center;gap:20px}
+    .nav-links a{text-decoration:none;color:var(--text-muted);font-size:0.9rem;font-weight:500;transition:color 0.2s}
+    .nav-links a:hover{color:var(--text)}
+    .btn-nav{background:var(--accent)!important;color:#0d0d0f!important;padding:8px 16px!important;border-radius:8px!important;font-weight:600!important}
+    .btn-logout{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:6px 14px;border-radius:8px;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+    .btn-logout:hover{color:var(--danger);border-color:rgba(255,77,77,0.3)}
+    .theme-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:5px 12px;cursor:pointer;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:5px}
+    .form-section{padding:60px 24px 80px}
+    .form-wrapper{max-width:720px;margin:0 auto}
+    .form-header{margin-bottom:36px}
+    .form-header h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+    .form-header p{color:var(--text-muted);font-size:0.95rem}
+    .job-form{display:flex;flex-direction:column;gap:20px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .form-group{display:flex;flex-direction:column;gap:8px}
+    .form-group.full{grid-column:1/-1}
+    .form-group label{font-size:0.85rem;font-weight:500;color:var(--text-muted)}
+    .form-group label span{color:var(--accent)}
+    .form-group input,.form-group textarea,.form-group select{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:rgba(245,166,35,0.5);box-shadow:0 0 0 3px rgba(245,166,35,0.08)}
+    .form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-faint)}
+    .form-group textarea{resize:vertical;min-height:120px}
+    .form-group select option{background:var(--surface2)}
+    .form-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding-top:8px}
+    .btn-primary{display:inline-flex;align-items:center;background:var(--accent);color:#0d0d0f;padding:12px 24px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+    .btn-primary:hover{background:#fbb83e;transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+    .btn-ghost{display:inline-flex;align-items:center;background:transparent;color:var(--text-muted);padding:12px 24px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9rem;text-decoration:none;border:1px solid var(--border);cursor:pointer;transition:all 0.2s}
+    .btn-ghost:hover{color:var(--text)}
+    .alert{padding:12px 14px;border-radius:10px;font-size:0.85rem;margin-bottom:20px;display:none}
+    .alert.error{background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.2);color:var(--danger);display:block}
+    .alert.success{background:rgba(62,207,142,0.1);border:1px solid rgba(62,207,142,0.2);color:var(--success);display:block}
+    .auth-gate{text-align:center;padding:80px 24px;display:none}
+    .auth-gate h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:12px}
+    .auth-gate p{color:var(--text-muted);margin-bottom:24px}
+    .footer{border-top:1px solid var(--border);padding:24px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+    .footer p{color:var(--text-faint);font-size:0.8rem}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--text-faint);text-decoration:none;font-size:0.8rem}
+    @media(max-width:640px){.form-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="container nav-content">
+    <a href="index.html" class="logo"><span class="logo-dot">⬡</span> Jobify</a>
+    <nav class="nav-links">
+      <a href="index.html">Browse</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="addjob.html" class="btn-nav">Post a Job</a>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+      <button class="theme-toggle" onclick="toggleTheme()"><span id="themeIcon">☀️</span></button>
+    </nav>
+  </div>
+</header>
+
+<section class="form-section">
+  <div class="container form-wrapper">
+    <div class="auth-gate" id="authGate">
+      <h3>🔒 Recruiters Only</h3>
+      <p>You need to be logged in as a recruiter to post jobs.</p>
+      <a href="login.html" class="btn-primary">Login as Recruiter</a>
+    </div>
+    <div id="formArea">
+      <div class="form-header">
+        <h2>Post a New Role</h2>
+        <p>Reach thousands of qualified candidates.</p>
+      </div>
+      <div class="alert" id="alert"></div>
+      <form id="addJobForm" class="job-form" novalidate>
+        <div class="form-row">
+          <div class="form-group"><label>Job Title <span>*</span></label><input id="title" placeholder="e.g. Senior Frontend Developer" required></div>
+          <div class="form-group"><label>Company Name <span>*</span></label><input id="company" placeholder="e.g. Acme Corp" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Location <span>*</span></label><input id="location" placeholder="e.g. Bangalore / Remote" required></div>
+          <div class="form-group"><label>Salary Range</label><input id="salary" placeholder="e.g. ₹10L – ₹15L"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Job Type</label>
+            <select id="type">
+              <option value="fulltime">Full-Time</option>
+              <option value="parttime">Part-Time</option>
+              <option value="remote">Remote</option>
+              <option value="contract">Contract</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Skills (comma-separated) <span>*</span></label><input id="skills" placeholder="e.g. React, Node.js, SQL" required></div>
+        </div>
+        <div class="form-group full"><label>Job Description <span>*</span></label><textarea id="description" rows="5" placeholder="Describe the role and responsibilities..." required></textarea></div>
+        <div class="form-actions">
+          <a href="index.html" class="btn-ghost">Cancel</a>
+          <button type="submit" class="btn-primary" id="submitBtn">Publish Job →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">⬡ Jobify</div>
+    <p>© 2026 Jobify. Built with ambition.</p>
+    <nav class="footer-links"><a href="index.html">Browse</a><a href="addjob.html">Post</a><a href="dashboard.html">Dashboard</a></nav>
+  </div>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+  }
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('token');
+
+  if (!user || user.role !== 'recruiter') {
+    document.getElementById('formArea').style.display = 'none';
+    document.getElementById('authGate').style.display = 'block';
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  }
+
+  function showAlert(msg, type) {
+    const el = document.getElementById('alert');
+    el.textContent = msg;
+    el.className = 'alert ' + type;
+  }
+
+  document.getElementById('addJobForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Publishing...';
+
+    const title = document.getElementById('title').value.trim();
+    const company = document.getElementById('company').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const salary = document.getElementById('salary').value.trim();
+    const type = document.getElementById('type').value;
+    const skills = document.getElementById('skills').value.trim();
+    const description = document.getElementById('description').value.trim();
+
+    if (!title || !company || !location || !skills || !description) {
+      showAlert('Please fill in all required fields.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Publish Job →';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/jobs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title, company, location, salary, type, skills, description })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showAlert(data.message || 'Failed to post job.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Publish Job →';
+        return;
+      }
+      showAlert('Job published successfully!', 'success');
+      btn.textContent = '✓ Published!';
+      btn.style.background = 'var(--success)';
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    } catch(err) {
+      showAlert('Cannot connect to server.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Publish Job →';
+    }
+  });
+</script>
+</body>
+</html>

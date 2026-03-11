@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Jobify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root[data-theme="dark"]{--bg:#0d0d0f;--surface:#161618;--surface2:#1e1e21;--border:rgba(255,255,255,0.07);--accent:#f5a623;--text:#f0ede8;--text-muted:#888;--text-faint:#444;--success:#3ecf8e;--danger:#ff4d4d;--shadow:rgba(0,0,0,0.4)}
+    :root[data-theme="light"]{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0f0eb;--border:rgba(0,0,0,0.08);--accent:#e8950f;--text:#0d0d0f;--text-muted:#666;--text-faint:#999;--success:#2db87a;--danger:#e03030;--shadow:rgba(0,0,0,0.1)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    .navbar{position:sticky;top:0;z-index:100;background:var(--bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-content{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .logo-dot{color:var(--accent)}
+    .nav-links{display:flex;align-items:center;gap:20px}
+    .nav-links a{text-decoration:none;color:var(--text-muted);font-size:0.9rem;font-weight:500;transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text)}
+    .btn-nav{background:var(--accent)!important;color:#0d0d0f!important;padding:8px 16px!important;border-radius:8px!important;font-weight:600!important}
+    .btn-logout{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:6px 14px;border-radius:8px;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+    .btn-logout:hover{color:var(--danger);border-color:rgba(255,77,77,0.3)}
+    .theme-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:5px 12px;cursor:pointer;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:5px}
+    .dashboard-section{padding:48px 24px 80px}
+    .dashboard-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+    .dashboard-header h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+    .dashboard-header p{color:var(--text-muted);font-size:0.9rem}
+    .dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px}
+    .dash-stat{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px 22px;display:flex;align-items:center;gap:14px}
+    .dash-stat-icon{font-size:1.5rem}
+    .dash-stat-num{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;letter-spacing:-1px;line-height:1}
+    .dash-stat-label{font-size:0.78rem;color:var(--text-muted);margin-top:2px}
+    .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:22px}
+    .dash-card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border)}
+    .dash-card-header h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:0.875rem}
+    th{text-align:left;padding:11px 24px;color:var(--text-faint);font-weight:500;font-size:0.73rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:var(--surface2)}
+    td{padding:13px 24px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(255,255,255,0.015)}
+    .td-bold{font-weight:600;color:var(--text)}
+    .empty-msg{padding:44px 24px;text-align:center;color:var(--text-faint);font-size:0.9rem}
+    .empty-msg a{color:var(--accent)}
+    .btn-primary{display:inline-flex;align-items:center;background:var(--accent);color:#0d0d0f;padding:11px 22px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.88rem;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+    .btn-primary:hover{background:#fbb83e}
+    .btn-sm{padding:5px 12px;font-size:0.77rem;border-radius:7px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.2s}
+    .btn-view{background:rgba(245,166,35,0.1);color:var(--accent);border:1px solid rgba(245,166,35,0.25)}
+    .btn-view:hover{background:rgba(245,166,35,0.18)}
+    .btn-del{background:transparent;color:var(--danger);opacity:0.55}
+    .btn-del:hover{opacity:1}
+    .btn-back{background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:5px 12px;font-size:0.77rem;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif}
+    .auth-gate{text-align:center;padding:80px 24px}
+    .auth-gate h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:12px}
+    .auth-gate p{color:var(--text-muted);margin-bottom:24px}
+    .loading{text-align:center;padding:40px;color:var(--text-muted);font-size:0.9rem}
+    .footer{border-top:1px solid var(--border);padding:24px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+    .footer p{color:var(--text-faint);font-size:0.8rem}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--text-faint);text-decoration:none;font-size:0.8rem}
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="container nav-content">
+    <a href="index.html" class="logo"><span class="logo-dot">⬡</span> Jobify</a>
+    <nav class="nav-links">
+      <a href="index.html">Browse</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="addjob.html" class="btn-nav">Post a Job</a>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+      <button class="theme-toggle" onclick="toggleTheme()"><span id="themeIcon">☀️</span></button>
+    </nav>
+  </div>
+</header>
+
+<section class="dashboard-section">
+  <div class="container" id="mainContent">
+
+    <!-- Auth Gate -->
+    <div class="auth-gate" id="authGate" style="display:none">
+      <h3>🔒 Recruiters Only</h3>
+      <p>You need to be logged in as a recruiter to view the dashboard.</p>
+      <a href="login.html" class="btn-primary">Login as Recruiter</a>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashContent" style="display:none">
+      <div class="dashboard-header">
+        <div>
+          <h2>Dashboard</h2>
+          <p id="welcomeMsg">Manage your job postings and applications.</p>
+        </div>
+        <a href="addjob.html" class="btn-primary">+ Post New Job</a>
+      </div>
+
+      <div class="dash-stats">
+        <div class="dash-stat"><span class="dash-stat-icon">📋</span><div><div id="sJobs" class="dash-stat-num">0</div><div class="dash-stat-label">Active Jobs</div></div></div>
+        <div class="dash-stat"><span class="dash-stat-icon">📥</span><div><div id="sApps" class="dash-stat-num">0</div><div class="dash-stat-label">Applications</div></div></div>
+      </div>
+
+      <!-- Jobs Table -->
+      <div class="dash-card" id="jobsCard">
+        <div class="dash-card-header">
+          <h3>Your Posted Jobs</h3>
+        </div>
+        <div class="table-wrap" id="jobsTable"><div class="loading">Loading jobs...</div></div>
+      </div>
+
+      <!-- Applications Table -->
+      <div class="dash-card" id="appsCard" style="display:none">
+        <div class="dash-card-header">
+          <h3 id="appsTitle">Applications</h3>
+          <button class="btn-back" id="backBtn" onclick="hideApps()">← All Jobs</button>
+        </div>
+        <div class="table-wrap" id="appsTable"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">⬡ Jobify</div>
+    <p>© 2026 Jobify. Built with ambition.</p>
+    <nav class="footer-links"><a href="index.html">Browse</a><a href="addjob.html">Post</a><a href="dashboard.html">Dashboard</a></nav>
+  </div>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+  }
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('token');
+
+  if (!user || user.role !== 'recruiter') {
+    document.getElementById('authGate').style.display = 'block';
+  } else {
+    document.getElementById('dashContent').style.display = 'block';
+    document.getElementById('welcomeMsg').textContent = `Welcome back, ${user.name}! Here are your postings.`;
+    loadDashboard();
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  }
+
+  const TYPE = { fulltime:'Full-Time', parttime:'Part-Time', remote:'Remote', contract:'Contract' };
+  function fmtDate(s) { return s ? new Date(s).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—'; }
+
+  async function loadDashboard() {
+    try {
+      const res = await fetch(`${API}/jobs`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      const jobs = data.internal || [];
+
+      // Filter only this recruiter's jobs
+      const myJobs = jobs.filter(j => j.recruiter_id == user.id);
+      document.getElementById('sJobs').textContent = myJobs.length;
+
+      renderJobsTable(myJobs);
+    } catch(err) {
+      document.getElementById('jobsTable').innerHTML = '<div class="empty-msg">Could not load jobs. Make sure backend is running.</div>';
+    }
+  }
+
+  function renderJobsTable(jobs) {
+    const wrap = document.getElementById('jobsTable');
+    if (!jobs.length) {
+      wrap.innerHTML = `<div class="empty-msg">No jobs posted yet. <a href="addjob.html">Post your first job →</a></div>`;
+      return;
+    }
+
+    let html = `<table><thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Type</th><th>Posted</th><th>Applications</th><th>Action</th></tr></thead><tbody>`;
+    jobs.forEach(j => {
+      html += `<tr>
+        <td class="td-bold">${j.title}</td>
+        <td>${j.company}</td>
+        <td>${j.location}</td>
+        <td>${TYPE[j.type]||'Full-Time'}</td>
+        <td>${fmtDate(j.created_at)}</td>
+        <td><button class="btn-sm btn-view" onclick="loadApps(${j.id}, '${j.title}')">View Apps</button></td>
+        <td><button class="btn-sm btn-del" onclick="deleteJob(${j.id})">Delete</button></td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    wrap.innerHTML = html;
+  }
+
+  async function loadApps(jobId, jobTitle) {
+    document.getElementById('appsCard').style.display = 'block';
+    document.getElementById('appsTitle').textContent = `Applications — ${jobTitle}`;
+    document.getElementById('appsTable').innerHTML = '<div class="loading">Loading applications...</div>';
+    document.getElementById('appsCard').scrollIntoView({ behavior:'smooth', block:'start' });
+
+    try {
+      const res = await fetch(`${API}/applications/job/${jobId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const apps = await res.json();
+
+      // Update apps count
+      document.getElementById('sApps').textContent = apps.length;
+
+      if (!apps.length) {
+        document.getElementById('appsTable').innerHTML = '<div class="empty-msg">No applications yet for this role.</div>';
+        return;
+      }
+
+      let html = `<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Portfolio</th><th>Applied</th><th>Cover Letter</th></tr></thead><tbody>`;
+      apps.forEach(a => {
+        html += `<tr>
+          <td class="td-bold">${a.name}</td>
+          <td><a href="mailto:${a.email}" style="color:var(--accent)">${a.email}</a></td>
+          <td>${a.phone||'—'}</td>
+          <td>${a.portfolio?`<a href="${a.portfolio}" target="_blank" style="color:var(--accent)">View →</a>`:'—'}</td>
+          <td>${fmtDate(a.applied_at)}</td>
+          <td style="max-width:220px;font-size:0.8rem;white-space:normal">${(a.cover_letter||'').slice(0,100)}${(a.cover_letter||'').length>100?'…':''}</td>
+        </tr>`;
+      });
+      html += `</tbody></table>`;
+      document.getElementById('appsTable').innerHTML = html;
+    } catch(err) {
+      document.getElementById('appsTable').innerHTML = '<div class="empty-msg">Could not load applications.</div>';
+    }
+  }
+
+  async function deleteJob(jobId) {
+    if (!confirm('Delete this job posting?')) return;
+    try {
+      await fetch(`${API}/jobs/${jobId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      loadDashboard();
+    } catch(err) {
+      alert('Could not delete job.');
+    }
+  }
+
+  function hideApps() {
+    document.getElementById('appsCard').style.display = 'none';
+  }
+</script>
+</body>
+</html>

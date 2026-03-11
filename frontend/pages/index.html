@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jobify — Find Your Next Role</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0d0d0f; --surface: #161618; --surface2: #1e1e21;
+      --border: rgba(255,255,255,0.07); --accent: #f5a623; --accent2: #ff6b35;
+      --text: #f0ede8; --text-muted: #888; --text-faint: #444;
+      --success: #3ecf8e; --danger: #ff4d4d; --shadow: rgba(0,0,0,0.4);
+    }
+    :root[data-theme="light"] {
+      --bg: #f5f5f0; --surface: #ffffff; --surface2: #f0f0eb;
+      --border: rgba(0,0,0,0.08); --accent: #e8950f; --accent2: #ff6b35;
+      --text: #0d0d0f; --text-muted: #666; --text-faint: #999;
+      --success: #2db87a; --danger: #e03030; --shadow: rgba(0,0,0,0.1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: background 0.3s; }
+    .nav-content { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo-dot { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .btn-nav { background: var(--accent) !important; color: #0d0d0f !important; padding: 8px 16px !important; border-radius: 8px !important; font-weight: 600 !important; }
+    .user-name { font-size: 0.85rem; color: var(--text-muted); }
+    .user-name span { color: var(--accent); font-weight: 600; }
+    .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-logout:hover { color: var(--danger); border-color: rgba(255,77,77,0.3); }
+    .theme-toggle { background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
+
+    .hero { padding: 80px 24px 60px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent); pointer-events: none; }
+    .hero-badge { display: inline-block; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); color: var(--accent); font-size: 0.8rem; padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; }
+    .hero-title { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.8rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin-bottom: 20px; }
+    .hero-title em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { color: var(--text-muted); font-size: 1rem; max-width: 460px; margin: 0 auto 32px; line-height: 1.6; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+    .hero-stats { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .stat { text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+    .stat span { display: block; font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .stat-div { width: 1px; height: 32px; background: var(--border); }
+
+    .btn-primary { display: inline-flex; align-items: center; background: var(--accent); color: #0d0d0f; padding: 12px 24px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #fbb83e; transform: translateY(-1px); }
+    .btn-ghost { display: inline-flex; align-items: center; background: transparent; color: var(--text-muted); padding: 12px 24px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); }
+
+    .search-section { padding: 0 24px 44px; }
+    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 6px 6px 18px; max-width: 660px; margin: 0 auto; transition: border-color 0.2s; }
+    .search-bar:focus-within { border-color: rgba(245,166,35,0.4); box-shadow: 0 0 0 3px rgba(245,166,35,0.08); }
+    .search-bar input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; padding-right: 12px; }
+    .search-bar input::placeholder { color: var(--text-faint); }
+    .search-bar select { background: var(--surface2); border: none; border-left: 1px solid var(--border); outline: none; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; padding: 10px 14px; border-radius: 0 14px 14px 0; cursor: pointer; }
+
+    .source-tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+    .source-tab { padding: 7px 18px; border-radius: 100px; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .source-tab.active { background: var(--accent); color: #0d0d0f; border-color: var(--accent); }
+
+    .jobs-section { padding: 0 24px 80px; }
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+    .job-count { font-size: 0.82rem; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); padding: 4px 12px; border-radius: 100px; }
+    .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+    .job-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 11px; transition: all 0.25s; position: relative; overflow: hidden; animation: fadeUp 0.35s ease both; }
+    .job-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.2s; }
+    .job-card:hover { border-color: rgba(245,166,35,0.2); transform: translateY(-3px); box-shadow: 0 16px 40px var(--shadow); }
+    .job-card:hover::before { opacity: 1; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .company-logo { width: 42px; height: 42px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .job-type-badge { font-size: 0.68rem; font-weight: 600; padding: 4px 10px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(245,166,35,0.1); color: var(--accent); border: 1px solid rgba(245,166,35,0.2); }
+    .external-badge { font-size: 0.68rem; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: rgba(62,207,142,0.1); color: var(--success); border: 1px solid rgba(62,207,142,0.2); }
+    .job-card h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; }
+    .job-meta { color: var(--text-muted); font-size: 0.83rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .job-salary { font-weight: 600; font-size: 0.88rem; color: var(--success); }
+    .job-skills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.7rem; padding: 3px 9px; border-radius: 6px; font-weight: 500; }
+    .job-desc { color: var(--text-muted); font-size: 0.83rem; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-actions { display: flex; gap: 8px; margin-top: 4px; }
+    .btn-apply { flex: 1; background: var(--accent); color: #0d0d0f; border: none; padding: 10px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-apply:hover { background: #fbb83e; }
+    .btn-save { width: 38px; height: 38px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 1rem; transition: all 0.2s; }
+    .btn-save:hover { color: var(--accent); }
+
+    .loading { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+    .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+    .footer { border-top: 1px solid var(--border); padding: 24px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+    .footer p { color: var(--text-faint); font-size: 0.8rem; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-faint); text-decoration: none; font-size: 0.8rem; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .job-card:nth-child(1){animation-delay:.05s} .job-card:nth-child(2){animation-delay:.1s} .job-card:nth-child(3){animation-delay:.15s} .job-card:nth-child(4){animation-delay:.2s} .job-card:nth-child(5){animation-delay:.25s} .job-card:nth-child(6){animation-delay:.3s}
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="container nav-content">
+    <a href="index.html" class="logo"><span class="logo-dot">⬡</span> Jobify</a>
+    <nav class="nav-links">
+      <a href="index.html">Browse</a>
+      <a href="dashboard.html" id="dashLink" style="display:none">Dashboard</a>
+      <a href="addjob.html" id="postLink" style="display:none" class="btn-nav">Post a Job</a>
+      <a href="login.html" id="loginLink">Login</a>
+      <span class="user-name" id="userBadge" style="display:none">Hi, <span id="userName"></span></span>
+      <button class="btn-logout" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+      <button class="theme-toggle" onclick="toggleTheme()"><span id="themeIcon">☀️</span></button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">🔥 2,400+ openings this week</div>
+    <h1 class="hero-title">Your Next<br><em>Big Career</em><br>Move Starts Here.</h1>
+    <p class="hero-sub">Curated roles from top startups & enterprises. No noise — just opportunity.</p>
+    <div class="hero-actions">
+      <a href="#jobs" class="btn-primary">Explore Jobs</a>
+      <a href="login.html" class="btn-ghost">Get Started →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span>12K+</span>Companies</div>
+      <div class="stat-div"></div>
+      <div class="stat"><span>48K+</span>Candidates</div>
+      <div class="stat-div"></div>
+      <div class="stat"><span>94%</span>Hire Rate</div>
+    </div>
+  </div>
+</section>
+
+<section class="search-section">
+  <div class="container">
+    <div class="search-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" style="flex-shrink:0;margin-right:10px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Role, company, or skill...">
+      <select id="filterType">
+        <option value="">All Types</option>
+        <option value="fulltime">Full-Time</option>
+        <option value="parttime">Part-Time</option>
+        <option value="remote">Remote</option>
+        <option value="contract">Contract</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section id="jobs" class="jobs-section">
+  <div class="container">
+    <div class="source-tabs">
+      <button class="source-tab active" id="tab-all" onclick="switchSource('all')">All Jobs</button>
+      <button class="source-tab" id="tab-internal" onclick="switchSource('internal')">Posted Jobs</button>
+      <button class="source-tab" id="tab-external" onclick="switchSource('external')">Remote Jobs</button>
+    </div>
+    <div class="section-header">
+      <h2 class="section-title">Available Positions</h2>
+      <span id="jobCount" class="job-count">Loading...</span>
+    </div>
+    <div id="jobList" class="job-grid"></div>
+    <div id="loadingState" class="loading"><div class="spinner"></div><p>Fetching latest jobs...</p></div>
+    <div id="emptyState" class="empty-state" style="display:none"><span>🔍</span><p>No jobs match your search.</p></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">⬡ Jobify</div>
+    <p>© 2026 Jobify. Built with ambition.</p>
+    <nav class="footer-links">
+      <a href="index.html">Browse</a>
+      <a href="login.html">Login</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+  const EMOJIS = ['🏢','🚀','💡','🔷','⚡','🌐','🎯','🔵','🦄','🎪'];
+  const TYPE_LABELS = { fulltime:'Full-Time', parttime:'Part-Time', remote:'Remote', contract:'Contract' };
+  let allJobs = { internal: [], external: [] };
+  let currentSource = 'all';
+
+  // THEME
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+  }
+
+  // AUTH
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user) {
+    document.getElementById('loginLink').style.display = 'none';
+    document.getElementById('userBadge').style.display = 'inline';
+    document.getElementById('logoutBtn').style.display = 'inline';
+    document.getElementById('userName').textContent = user.name.split(' ')[0];
+    if (user.role === 'recruiter') {
+      document.getElementById('dashLink').style.display = 'inline';
+      document.getElementById('postLink').style.display = 'inline';
+    }
+  }
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  }
+
+  // SOURCE TABS
+  function switchSource(src) {
+    currentSource = src;
+    ['all','internal','external'].forEach(s => {
+      document.getElementById('tab-'+s).classList.toggle('active', s === src);
+    });
+    renderJobs();
+  }
+
+  // FETCH
+  async function fetchJobs() {
+    try {
+      const res = await fetch(`${API}/jobs`);
+      const data = await res.json();
+      allJobs.internal = data.internal || [];
+      allJobs.external = data.external || [];
+      document.getElementById('loadingState').style.display = 'none';
+      renderJobs();
+    } catch(err) {
+      document.getElementById('loadingState').innerHTML = '<p style="color:var(--danger)">Could not load jobs. Make sure backend is running on port 5000.</p>';
+    }
+  }
+
+  // RENDER
+  function renderJobs() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const t = document.getElementById('filterType').value;
+    let jobs = currentSource === 'all' ? [...allJobs.internal, ...allJobs.external]
+             : currentSource === 'internal' ? allJobs.internal : allJobs.external;
+
+    jobs = jobs.filter(j => {
+      const skills = typeof j.skills === 'string' ? j.skills : (j.skills||[]).join(',');
+      const mQ = !q || j.title?.toLowerCase().includes(q) || j.company?.toLowerCase().includes(q) || j.location?.toLowerCase().includes(q) || skills.toLowerCase().includes(q);
+      const mT = !t || j.type === t;
+      return mQ && mT;
+    });
+
+    const jobList = document.getElementById('jobList');
+    jobList.innerHTML = '';
+    document.getElementById('emptyState').style.display = jobs.length ? 'none' : 'block';
+    document.getElementById('jobCount').textContent = jobs.length + ' role' + (jobs.length !== 1 ? 's' : '');
+
+    jobs.forEach((job, i) => {
+      const isExt = job.source === 'remotive';
+      const skills = typeof job.skills === 'string' ? job.skills.split(',').map(s=>s.trim()).filter(Boolean) : (job.skills||[]);
+      const div = document.createElement('div');
+      div.className = 'job-card';
+      div.style.animationDelay = (i*0.05)+'s';
+      div.innerHTML = `
+        <div class="card-top">
+          <div class="company-logo">${EMOJIS[i%EMOJIS.length]}</div>
+          <span class="${isExt?'external-badge':'job-type-badge'}">${isExt?'🌍 Remote':(TYPE_LABELS[job.type]||'Full-Time')}</span>
+        </div>
+        <h3>${job.title}</h3>
+        <div class="job-meta"><span>${job.company}</span><span>·</span><span>${job.location}</span></div>
+        ${job.salary&&job.salary!=='Not specified'?`<div class="job-salary">${job.salary}</div>`:''}
+        <div class="job-skills">${skills.slice(0,4).map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div>
+        <p class="job-desc">${(job.description||'').replace(/<[^>]*>/g,'').slice(0,120)}...</p>
+        <div class="card-actions">
+          ${isExt
+            ? `<a href="${job.url}" target="_blank" class="btn-apply">View Job →</a>`
+            : `<a href="apply.html?id=${job.id}&title=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}&location=${encodeURIComponent(job.location||'')}" class="btn-apply">Apply Now</a>`
+          }
+          <div class="btn-save">♡</div>
+        </div>`;
+      div.querySelector('.btn-save').addEventListener('click', function(){
+        this.textContent = this.textContent==='♡'?'♥':'♡';
+        this.style.color = this.textContent==='♥'?'var(--accent)':'';
+      });
+      jobList.appendChild(div);
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', renderJobs);
+  document.getElementById('filterType').addEventListener('change', renderJobs);
+
+  fetchJobs();
+</script>
+</body>
+</html>

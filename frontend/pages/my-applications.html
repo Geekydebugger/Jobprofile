@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Applications — Jobify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root[data-theme="dark"]{--bg:#0d0d0f;--surface:#161618;--surface2:#1e1e21;--border:rgba(255,255,255,0.07);--accent:#f5a623;--text:#f0ede8;--text-muted:#888;--text-faint:#444;--success:#3ecf8e;--danger:#ff4d4d;--shadow:rgba(0,0,0,0.4)}
+    :root[data-theme="light"]{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0f0eb;--border:rgba(0,0,0,0.08);--accent:#e8950f;--text:#0d0d0f;--text-muted:#666;--text-faint:#999;--success:#2db87a;--danger:#e03030;--shadow:rgba(0,0,0,0.1)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+    .navbar{position:sticky;top:0;z-index:100;background:var(--bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-content{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .logo-dot{color:var(--accent)}
+    .nav-links{display:flex;align-items:center;gap:20px}
+    .nav-links a{text-decoration:none;color:var(--text-muted);font-size:0.9rem;font-weight:500;transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text)}
+    .btn-logout{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:6px 14px;border-radius:8px;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+    .btn-logout:hover{color:var(--danger);border-color:rgba(255,77,77,0.3)}
+    .theme-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:5px 12px;cursor:pointer;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:5px}
+
+    .page-section{padding:48px 24px 80px}
+    .page-header{margin-bottom:32px}
+    .page-header h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+    .page-header p{color:var(--text-muted);font-size:0.95rem}
+
+    .stats-row{display:flex;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+    .stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:10px}
+    .stat-pill-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-1px}
+    .stat-pill-label{font-size:0.78rem;color:var(--text-muted)}
+
+    .app-grid{display:flex;flex-direction:column;gap:14px}
+    .app-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:all 0.2s;animation:fadeUp 0.3s ease both}
+    .app-card:hover{border-color:rgba(245,166,35,0.2);transform:translateY(-2px);box-shadow:0 8px 24px var(--shadow)}
+    .app-left{display:flex;align-items:center;gap:16px}
+    .app-icon{width:44px;height:44px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .app-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px}
+    .app-meta{font-size:0.82rem;color:var(--text-muted)}
+    .app-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .app-date{font-size:0.78rem;color:var(--text-faint)}
+    .resume-link{font-size:0.8rem;color:var(--accent);text-decoration:none;border:1px solid rgba(245,166,35,0.25);padding:5px 12px;border-radius:7px;transition:all 0.2s}
+    .resume-link:hover{background:rgba(245,166,35,0.08)}
+    .status-badge{font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;background:rgba(245,166,35,0.1);color:var(--accent);border:1px solid rgba(245,166,35,0.2)}
+
+    .loading{text-align:center;padding:60px 24px;color:var(--text-muted)}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty-state{text-align:center;padding:80px 24px;color:var(--text-muted)}
+    .empty-state span{font-size:2.5rem;display:block;margin-bottom:12px}
+    .empty-state a{color:var(--accent)}
+
+    .auth-gate{text-align:center;padding:80px 24px}
+    .auth-gate h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:12px}
+    .auth-gate p{color:var(--text-muted);margin-bottom:24px}
+    .btn-primary{display:inline-flex;align-items:center;background:var(--accent);color:#0d0d0f;padding:12px 24px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+    .btn-primary:hover{background:#fbb83e}
+
+    .footer{border-top:1px solid var(--border);padding:24px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+    .footer p{color:var(--text-faint);font-size:0.8rem}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--text-faint);text-decoration:none;font-size:0.8rem}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .app-card:nth-child(1){animation-delay:.05s}.app-card:nth-child(2){animation-delay:.1s}.app-card:nth-child(3){animation-delay:.15s}.app-card:nth-child(4){animation-delay:.2s}
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="container nav-content">
+    <a href="index.html" class="logo"><span class="logo-dot">⬡</span> Jobify</a>
+    <nav class="nav-links">
+      <a href="index.html">Browse Jobs</a>
+      <a href="my-applications.html" class="active">My Applications</a>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+      <button class="theme-toggle" onclick="toggleTheme()"><span id="themeIcon">☀️</span></button>
+    </nav>
+  </div>
+</header>
+
+<section class="page-section">
+  <div class="container">
+
+    <!-- Auth Gate -->
+    <div class="auth-gate" id="authGate" style="display:none">
+      <h3>🔒 Students Only</h3>
+      <p>You need to be logged in as a student to view your applications.</p>
+      <a href="login.html" class="btn-primary">Login</a>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" style="display:none">
+      <div class="page-header">
+        <h2>My Applications</h2>
+        <p id="welcomeMsg">Track all your job applications in one place.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill">
+          <div>
+            <div id="totalApps" class="stat-pill-num">0</div>
+            <div class="stat-pill-label">Total Applied</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div id="recentApps" class="stat-pill-num">0</div>
+            <div class="stat-pill-label">This Week</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="loadingState" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your applications...</p>
+      </div>
+
+      <div id="appGrid" class="app-grid" style="display:none"></div>
+
+      <div id="emptyState" class="empty-state" style="display:none">
+        <span>📭</span>
+        <p>You haven't applied to any jobs yet.</p>
+        <br>
+        <a href="index.html">Browse Jobs →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">⬡ Jobify</div>
+    <p>© 2026 Jobify. Built with ambition.</p>
+    <nav class="footer-links">
+      <a href="index.html">Browse</a>
+      <a href="my-applications.html">My Apps</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+  const EMOJIS = ['🏢','🚀','💡','🔷','⚡','🌐','🎯','🔵'];
+
+  // THEME
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+  }
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('token');
+
+  if (!user || user.role !== 'student') {
+    document.getElementById('authGate').style.display = 'block';
+  } else {
+    document.getElementById('mainContent').style.display = 'block';
+    document.getElementById('welcomeMsg').textContent = `Hi ${user.name.split(' ')[0]}! Here are all your applications.`;
+    loadApplications();
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  }
+
+  function fmtDate(s) {
+    return s ? new Date(s).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+  }
+
+  function isThisWeek(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+    return d >= weekAgo;
+  }
+
+  async function loadApplications() {
+    try {
+      const res = await fetch(`${API}/applications/mine`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const apps = await res.json();
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('totalApps').textContent = apps.length;
+      document.getElementById('recentApps').textContent = apps.filter(a => isThisWeek(a.applied_at)).length;
+
+      if (!apps.length) {
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+      }
+
+      const grid = document.getElementById('appGrid');
+      grid.style.display = 'flex';
+
+      apps.forEach((app, i) => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = `
+          <div class="app-left">
+            <div class="app-icon">${EMOJIS[i % EMOJIS.length]}</div>
+            <div>
+              <div class="app-title">${app.job_title || 'Job'}</div>
+              <div class="app-meta">${app.company || '—'} · Applied on ${fmtDate(app.applied_at)}</div>
+            </div>
+          </div>
+          <div class="app-right">
+            ${app.resume_url
+              ? `<a href="http://localhost:5000${app.resume_url}" target="_blank" class="resume-link">📄 Resume</a>`
+              : ''
+            }
+            <span class="status-badge">Applied</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+    } catch(err) {
+      document.getElementById('loadingState').innerHTML = '<p style="color:var(--danger)">Could not load applications. Make sure backend is running.</p>';
+    }
+  }
+</script>
+</body>
+</html>

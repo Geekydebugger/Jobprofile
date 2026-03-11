@@ -1,0 +1,4 @@
+router.post('/register', async (req, res) => {
+  try {
+    console.log('Register hit:', req.body); // ADD THIS LINE
+    const { name, email, password, role } = req.body;
